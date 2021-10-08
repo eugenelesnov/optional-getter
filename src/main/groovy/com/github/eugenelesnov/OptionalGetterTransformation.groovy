@@ -37,7 +37,7 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
                     ACC_PUBLIC,
                     annotatedField.getType(),
                     Parameter.EMPTY_ARRAY,
-                    new ClassNode[]{},
+                    ClassNode.EMPTY_ARRAY,
                     new ReturnStatement(
                             new ConstantExpression(Optional.ofNullable(annotatedField.getInitialExpression()))
                     )
