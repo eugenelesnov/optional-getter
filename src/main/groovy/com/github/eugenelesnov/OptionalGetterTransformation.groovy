@@ -1,10 +1,7 @@
 package com.github.eugenelesnov
 
 import groovy.transform.CompileStatic
-import org.codehaus.groovy.ast.ASTNode
-import org.codehaus.groovy.ast.ClassNode
-import org.codehaus.groovy.ast.FieldNode
-import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
@@ -22,11 +19,16 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
 
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
-        super.init(nodes, source)
+        if (nodes != null) {
+            super.init(nodes, source)
 
-        Arrays.stream(nodes)
-                .filter(node -> node instanceof FieldNode)
-                .forEach(node -> visitNode((FieldNode) node))
+            AnnotationNode annotation = nodes[0] as AnnotationNode
+            AnnotatedNode annotatedField = nodes[1] as AnnotatedNode
+
+            if (annotatedField instanceof FieldNode) {
+                visitNode(annotatedField)
+            }
+        }
     }
 
     private static void visitNode(FieldNode annotatedField) {
