@@ -5,6 +5,10 @@ plugins {
 group 'com.github.eugenelesnov'
 version '1.0-SNAPSHOT'
 
+wrapper {
+    gradleVersion = '7.0'
+}
+
 repositories {
     mavenCentral()
 }
