@@ -46,9 +46,7 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
     }
 
     private static boolean isFieldValidForAST(FieldNode annotatedField) {
-        if (annotatedField.getAnnotations(OPTIONAL_GETTER_ANNOTATION) < 1) {
-            return false
-        }
-        return true
+        return annotatedField.getAnnotations().stream()
+                .anyMatch(a -> a.getClassNode() == OPTIONAL_GETTER_ANNOTATION)
     }
 }
