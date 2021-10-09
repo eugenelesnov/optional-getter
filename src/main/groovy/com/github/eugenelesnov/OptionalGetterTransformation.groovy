@@ -33,9 +33,8 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
 
     private static void visitNode(FieldNode annotatedField) {
         if (isFieldValidForAST(annotatedField)) {
-            def owner = annotatedField.getOwner()
-            owner.addMethod(
-                    "getOptional" + annotatedField.getName().capitalize(),
+            annotatedField.getOwner().addMethod(
+                    "get" + annotatedField.getName().capitalize() + "Optional",
                     ACC_PUBLIC,
                     annotatedField.getType(),
                     Parameter.EMPTY_ARRAY,
