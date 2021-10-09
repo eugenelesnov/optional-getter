@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:3.0.5'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
     testImplementation 'org.codehaus.groovy:groovy-test:3.0.5'
 }
