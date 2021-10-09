@@ -2,7 +2,8 @@ package com.github.eugenelesnov
 
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.*
-import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
@@ -39,11 +40,15 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
                     annotatedField.getType(),
                     Parameter.EMPTY_ARRAY,
                     ClassNode.EMPTY_ARRAY,
-                    new ReturnStatement(
-                            new ConstantExpression(Optional.ofNullable(annotatedField.getInitialExpression()))
-                    )
+                    buildMethodBody(annotatedField.getInitialValueExpression())
             )
         }
+    }
+
+    private static ReturnStatement buildMethodBody(Expression valueToReturn) {
+        new ReturnStatement(
+                new StaticMethodCallExpression(new ClassNode(Optional.class), "ofNullable", valueToReturn)
+        )
     }
 
     private static boolean isFieldValidForAST(FieldNode annotatedField) {
