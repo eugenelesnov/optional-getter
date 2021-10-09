@@ -5,11 +5,12 @@ import groovyjarjarasm.asm.Opcodes
 enum Visibility {
     PUBLIC, PROTECTED, PRIVATE
 
-    static int parseOpCode(Visibility visibility) {
+    static Integer parseOpCode(String visibility) {
         switch (visibility) {
-            case PUBLIC: return Opcodes.ACC_PUBLIC
-            case PROTECTED: return Opcodes.ACC_PROTECTED
-            case PRIVATE: return Opcodes.ACC_PRIVATE
+            case PUBLIC.name(): return Opcodes.ACC_PUBLIC
+            case PROTECTED.name(): return Opcodes.ACC_PROTECTED
+            case PRIVATE.name(): return Opcodes.ACC_PRIVATE
+            default: null
         }
     }
 }
