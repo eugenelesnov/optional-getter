@@ -15,6 +15,7 @@ import static com.github.eugenelesnov.Visibility.parseOpCode
 import static org.codehaus.groovy.ast.ClassHelper.make
 
 @CompileStatic
+@SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class OptionalGetterTransformation extends AbstractASTTransformation {
 
@@ -34,7 +35,7 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
         }
     }
 
-    private static void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
+    private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
         if (isFieldValidForAST(annotatedField)) {
             annotatedField.getOwner().addMethod(
                     "get" + annotatedField.getName().capitalize() + "Optional",
@@ -47,18 +48,18 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
         }
     }
 
-    private static ReturnStatement buildMethodBody(Expression valueToReturn) {
+    private ReturnStatement buildMethodBody(Expression valueToReturn) {
         new ReturnStatement(
                 new StaticMethodCallExpression(new ClassNode(Optional.class), "ofNullable", valueToReturn)
         )
     }
 
-    private static int getVisibilityProperty(AnnotationNode annotation) {
+    private int getVisibilityProperty(AnnotationNode annotation) {
         def visibility = annotation.getMember("visibility").getProperties()["property"] as ConstantExpression
         return parseOpCode(visibility.getValue().toString())
     }
 
-    private static boolean isFieldValidForAST(FieldNode annotatedField) {
+    private boolean isFieldValidForAST(FieldNode annotatedField) {
         return annotatedField.getAnnotations().stream()
                 .anyMatch(a -> a.getClassNode() == OPTIONAL_GETTER_ANNOTATION)
     }
