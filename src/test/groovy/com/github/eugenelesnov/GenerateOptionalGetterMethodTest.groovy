@@ -11,13 +11,13 @@ import static org.codehaus.groovy.control.CompilePhase.CANONICALIZATION
     when: 'we inspect the result of applying AST to the class of annotated field'
     def classNode = node as ClassNode
 
-    then: 'classNode contains getter method that returns Optional'
+    then: 'generated method name should be getSomeFieldOptional'
     MethodNode methodNode = classNode.getAllDeclaredMethods().stream()
             .filter(methodNode -> methodNode.getName() == "getSomeFieldOptional")
             .findAny()
             .orElseThrow()
 
-    andThen: 'classNode contains getter method that returns Optional'
+    andThen: 'generated method should return Optional'
     assert methodNode.getReturnType().getTypeClass() == Optional
 
     andThen: 'generated method should have protected modifier'
