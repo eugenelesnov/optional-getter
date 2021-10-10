@@ -15,7 +15,8 @@ import static org.codehaus.groovy.control.CompilePhase.CANONICALIZATION
     MethodNode methodNode = classNode.getAllDeclaredMethods().stream()
             .filter(methodNode -> methodNode.getName() == "getSomeFieldOptional")
             .findAny()
-            .orElseThrow()
+            .orElseGet(() -> null)
+    assert methodNode != null
 
     andThen: 'generated method should return Optional'
     assert methodNode.getReturnType().getTypeClass() == Optional
