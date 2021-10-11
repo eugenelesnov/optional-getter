@@ -19,8 +19,6 @@ import static org.codehaus.groovy.ast.ClassHelper.make
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class OptionalGetterTransformation extends AbstractASTTransformation {
 
-    private static final ClassNode OPTIONAL_GETTER_ANNOTATION = make(OptionalGetter)
-
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
         if (nodes != null) {
@@ -36,31 +34,24 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
     }
 
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
-        if (isFieldValidForAST(annotatedField)) {
-            annotatedField.getOwner().addMethod(
-                    "get" + annotatedField.getName().capitalize() + "Optional",
-                    getVisibilityProperty(annotation),
-                    new ClassNode(Optional.class),
-                    Parameter.EMPTY_ARRAY,
-                    ClassNode.EMPTY_ARRAY,
-                    buildMethodBody(annotatedField.getInitialValueExpression())
-            )
-        }
+        annotatedField.getOwner().addMethod(
+                "get" + annotatedField.getName().capitalize() + "Optional",
+                getVisibilityProperty(annotation),
+                new ClassNode(Optional),
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                buildMethodBody(annotatedField.getInitialValueExpression())
+        )
     }
 
     private ReturnStatement buildMethodBody(Expression valueToReturn) {
-        new ReturnStatement(
-                new StaticMethodCallExpression(new ClassNode(Optional.class), "ofNullable", valueToReturn)
+        return new ReturnStatement(
+                new StaticMethodCallExpression(make(Optional), "ofNullable", new ConstantExpression(valueToReturn))
         )
     }
 
     private int getVisibilityProperty(AnnotationNode annotation) {
         def visibility = annotation.getMember("visibility").getProperties()["property"] as ConstantExpression
         return parseOpCode(visibility.getValue().toString())
-    }
-
-    private boolean isFieldValidForAST(FieldNode annotatedField) {
-        return annotatedField.getAnnotations().stream()
-                .anyMatch(a -> a.getClassNode() == OPTIONAL_GETTER_ANNOTATION)
     }
 }
