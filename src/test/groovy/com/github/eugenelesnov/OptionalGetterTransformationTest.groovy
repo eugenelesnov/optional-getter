@@ -20,10 +20,10 @@ class OptionalGetterTransformationTest extends GroovyAssert {
             Foo foo = new Foo()
             foo.setSomeField("value")
 
-            def getter = foo.getClass().getDeclaredMethod("getSomeFieldOptional", new Class[] {})
+            def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
-            assert Arrays.asList(getter.getModifiers()).contains(Opcodes.ACC_PUBLIC)
-            assert getter.getReturnType() instanceof Optional
+            assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PUBLIC)
+            assert getter.returnType instanceof Optional
         }
 '''
     }
@@ -44,10 +44,10 @@ class OptionalGetterTransformationTest extends GroovyAssert {
             Foo foo = new Foo()
             foo.setSomeField("value")
 
-            def getter = foo.getClass().getDeclaredMethod("getSomeFieldOptional", new Class[] {})
+            def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
-            assert Arrays.asList(getter.getModifiers()).contains(Opcodes.ACC_PROTECTED)
-            assert getter.getReturnType() instanceof Optional
+            assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PROTECTED)
+            assert getter.returnType instanceof Optional
         }
 '''
     }
@@ -68,10 +68,10 @@ class OptionalGetterTransformationTest extends GroovyAssert {
             Foo foo = new Foo()
             foo.setSomeField("value")
 
-            def getter = foo.getClass().getDeclaredMethod("getSomeFieldOptional", new Class[] {})
+            def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
-            assert Arrays.asList(getter.getModifiers()).contains(Opcodes.ACC_PRIVATE)
-            assert getter.getReturnType() instanceof Optional
+            assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PRIVATE)
+            assert getter.returnType instanceof Optional
         }
 '''
     }

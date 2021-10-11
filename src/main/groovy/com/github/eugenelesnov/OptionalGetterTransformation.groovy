@@ -34,24 +34,28 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
     }
 
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
-        annotatedField.getOwner().addMethod(
-                "get" + annotatedField.getName().capitalize() + "Optional",
+        annotatedField.owner.addMethod(
+                "get" + annotatedField.name.capitalize() + "Optional",
                 getVisibilityProperty(annotation),
                 new ClassNode(Optional),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                buildMethodBody(annotatedField.getInitialValueExpression())
+                buildMethodBody(annotatedField.initialValueExpression)
         )
     }
 
     private ReturnStatement buildMethodBody(Expression valueToReturn) {
         return new ReturnStatement(
-                new StaticMethodCallExpression(make(Optional), "ofNullable", new ConstantExpression(valueToReturn))
+                new StaticMethodCallExpression(
+                        make(Optional),
+                        "ofNullable",
+                        new ConstantExpression(valueToReturn)
+                )
         )
     }
 
     private int getVisibilityProperty(AnnotationNode annotation) {
-        def visibility = annotation.getMember("visibility").getProperties()["property"] as ConstantExpression
-        return parseOpCode(visibility.getValue().toString())
+        def visibility = annotation.getMember("visibility").properties["property"] as ConstantExpression
+        return parseOpCode(visibility.value as String)
     }
 }
