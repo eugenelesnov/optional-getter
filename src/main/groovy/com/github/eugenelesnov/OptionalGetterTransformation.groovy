@@ -10,8 +10,6 @@ import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
-import static com.github.eugenelesnov.Visibility.parseOpCode
-
 @SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 class OptionalGetterTransformation extends AbstractASTTransformation {
@@ -53,6 +51,6 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
 
     private int getVisibilityProperty(AnnotationNode annotation) {
         def visibility = annotation.getMember("visibility").properties["property"] as ConstantExpression
-        return parseOpCode(visibility.value as String)
+        return Visibility.valueOf(visibility.value as String).code
     }
 }
