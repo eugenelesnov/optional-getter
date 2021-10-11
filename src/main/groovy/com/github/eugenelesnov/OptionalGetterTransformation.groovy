@@ -1,6 +1,5 @@
 package com.github.eugenelesnov
 
-
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
@@ -12,7 +11,6 @@ import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 import static com.github.eugenelesnov.Visibility.parseOpCode
-import static org.codehaus.groovy.ast.ClassHelper.make
 
 @SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
@@ -46,7 +44,7 @@ class OptionalGetterTransformation extends AbstractASTTransformation {
     private ReturnStatement buildMethodBody(Expression valueToReturn) {
         return new ReturnStatement(
                 new StaticMethodCallExpression(
-                        make(Optional),
+                        new ClassNode(Optional),
                         "ofNullable",
                         new ConstantExpression(valueToReturn)
                 )
