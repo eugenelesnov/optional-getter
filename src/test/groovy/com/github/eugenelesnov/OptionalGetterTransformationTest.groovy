@@ -33,7 +33,7 @@ class OptionalGetterTransformationTest extends GroovyAssert {
         assertScript '''
         import com.github.eugenelesnov.OptionalGetter
         import com.github.eugenelesnov.Visibility
-import jdk.internal.org.objectweb.asm.Opcodes
+        import jdk.internal.org.objectweb.asm.Opcodes
 
         class Foo {
             @OptionalGetter(visibility = Visibility.PROTECTED)
@@ -57,7 +57,7 @@ import jdk.internal.org.objectweb.asm.Opcodes
         assertScript '''
         import com.github.eugenelesnov.OptionalGetter
         import com.github.eugenelesnov.Visibility
-import jdk.internal.org.objectweb.asm.Opcodes
+        import jdk.internal.org.objectweb.asm.Opcodes
 
         class Foo {
             @OptionalGetter(visibility = Visibility.PRIVATE)
