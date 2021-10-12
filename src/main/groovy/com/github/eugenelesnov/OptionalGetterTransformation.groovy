@@ -2,13 +2,12 @@ package com.github.eugenelesnov
 
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
-import org.codehaus.groovy.ast.expr.Expression
-import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
-import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.FieldASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
+
+import static org.codehaus.groovy.ast.tools.GenericsUtils.makeClassSafeWithGenerics
 
 @SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
@@ -28,23 +27,15 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     }
 
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
+        def fieldValue = annotatedField.properties as ConstantExpression
+
         annotatedField.owner.addMethod(
                 "get" + annotatedField.name.capitalize() + "Optional",
                 getVisibilityProperty(annotation),
-                new ClassNode(Optional),
+                makeClassSafeWithGenerics(Optional, fieldValue.type),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                buildMethodBody(annotatedField.initialValueExpression)
-        )
-    }
-
-    private ReturnStatement buildMethodBody(Expression valueToReturn) {
-        return new ReturnStatement(
-                new StaticMethodCallExpression(
-                        new ClassNode(Optional),
-                        "ofNullable",
-                        new ConstantExpression(valueToReturn)
-                )
+                macro { return Optional.ofNullable(fieldValue.value) }
         )
     }
 
