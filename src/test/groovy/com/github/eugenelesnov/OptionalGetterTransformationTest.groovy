@@ -1,12 +1,13 @@
 package com.github.eugenelesnov
 
-import groovy.test.GroovyAssert
 import org.junit.jupiter.api.Test
 
-class OptionalGetterTransformationTest extends GroovyAssert {
+import static groovy.test.GroovyAssert.assertScript
+
+class OptionalGetterTransformationTest {
 
     @Test
-    void 'should generate optional getter with public modifier'() {
+    void 'should generate optional getter with String as generic and with public modifier'() {
         assertScript '''
         import com.github.eugenelesnov.OptionalGetter
         import com.github.eugenelesnov.Visibility
@@ -23,13 +24,16 @@ class OptionalGetterTransformationTest extends GroovyAssert {
             def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
             assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PUBLIC)
-            assert getter.returnType instanceof Optional
+            assert getter.returnType instanceof Optional<String>
+            Optional<String> optional = foo.getSomeFieldOptional()
+            optional.ifPresentOrElse(value -> { assert value == getSomeField()}, 
+                    () -> { throw new Exception("actual value not equals to expected")})
         }
 '''
     }
 
     @Test
-    void 'should generate optional getter with protected modifier'() {
+    void 'should generate optional getter with Integer as generic and with protected modifier'() {
         assertScript '''
         import com.github.eugenelesnov.OptionalGetter
         import com.github.eugenelesnov.Visibility
@@ -37,41 +41,53 @@ class OptionalGetterTransformationTest extends GroovyAssert {
 
         class Foo {
             @OptionalGetter(visibility = Visibility.PROTECTED)
-            private String someField
+            private Integer someField
         }
         
         void main() {
             Foo foo = new Foo()
-            foo.setSomeField("value")
+            foo.setSomeField(1)
 
             def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
             assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PROTECTED)
-            assert getter.returnType instanceof Optional
+            assert getter.returnType instanceof Optional<Integer>
+            Optional<Integer> optional = foo.getSomeFieldOptional()
+            optional.ifPresentOrElse(value -> { assert value == foo.getSomeField()}, 
+                    () -> { throw new Exception("actual value not equals to expected")})
         }
 '''
     }
 
     @Test
-    void 'should generate optional getter with private modifier'() {
+    void 'should generate optional getter with some custom object as generic and with private modifier'() {
         assertScript '''
         import com.github.eugenelesnov.OptionalGetter
         import com.github.eugenelesnov.Visibility
         import jdk.internal.org.objectweb.asm.Opcodes
 
+        class Bar {
+            private String bar
+        }
+
         class Foo {
             @OptionalGetter(visibility = Visibility.PRIVATE)
-            private String someField
+            private Bar someField
         }
         
         void main() {
             Foo foo = new Foo()
-            foo.setSomeField("value")
+            Bar bar = new Bar()
+            bar.setBar("bar")
+            foo.setSomeField(bar)
 
             def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
             assert getter != null
             assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PRIVATE)
-            assert getter.returnType instanceof Optional
+            assert getter.returnType instanceof Optional<Bar>
+            Optional<Bar> optional = foo.getSomeFieldOptional()
+            optional.ifPresentOrElse(value -> { assert value == getSomeField()}, 
+                    () -> { throw new Exception("actual value not equals to expected")})
         }
 '''
     }
