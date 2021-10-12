@@ -1,5 +1,6 @@
 package com.github.eugenelesnov
 
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.control.CompilePhase
@@ -9,6 +10,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 
 import static org.codehaus.groovy.ast.tools.GenericsUtils.makeClassSafeWithGenerics
 
+@CompileStatic
 @SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 class OptionalGetterTransformation extends FieldASTTransformation {
