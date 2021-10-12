@@ -7,17 +7,16 @@ import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
-import org.codehaus.groovy.transform.AbstractASTTransformation
+import org.codehaus.groovy.transform.FieldASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 @SuppressWarnings("GrMethodMayBeStatic")
-@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-class OptionalGetterTransformation extends AbstractASTTransformation {
+@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+class OptionalGetterTransformation extends FieldASTTransformation {
 
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
         if (nodes != null) {
-            super.init(nodes, source)
 
             AnnotationNode annotation = nodes[0] as AnnotationNode
             AnnotatedNode annotatedField = nodes[1] as AnnotatedNode
