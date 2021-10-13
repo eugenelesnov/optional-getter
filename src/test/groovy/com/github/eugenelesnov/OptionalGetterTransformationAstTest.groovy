@@ -14,8 +14,8 @@ class OptionalGetterTransformationAstTest {
         when: 'we inspect the result of applying AST to the annotated field'
         def fieldNode = node as FieldNode
 
-        then: 'generated method name should be getSomeFieldOptional'
-        MethodNode methodNode = fieldNode.owner.getDeclaredMethod("getSomeFieldOptional", Parameter.EMPTY_ARRAY)
+        then: 'generated method name should be getSomeStringFieldOptional'
+        MethodNode methodNode = fieldNode.owner.getDeclaredMethod("getSomeStringFieldOptional", Parameter.EMPTY_ARRAY)
         assert methodNode != null
 
         andThen: 'generated method should return Optional<String>'
@@ -25,7 +25,24 @@ class OptionalGetterTransformationAstTest {
         assert methodNode.isProtected()
     })
     @OptionalGetter(visibility = Visibility.PROTECTED)
-    private String someField
+    private String someStringField
+
+    @ASTTest(phase = CompilePhase.SEMANTIC_ANALYSIS, value = {
+        when: 'we inspect the result of applying AST to the annotated field'
+        def fieldNode = node as FieldNode
+
+        then: 'generated method name should be getSomeBooleanFieldOptional'
+        MethodNode methodNode = fieldNode.owner.getDeclaredMethod("getSomeBooleanFieldOptional", Parameter.EMPTY_ARRAY)
+        assert methodNode != null
+
+        andThen: 'generated method should return Optional<Boolean>'
+        assert methodNode.returnType == make(Optional<Boolean>)
+
+        andThen: 'generated method should have public modifier'
+        assert methodNode.isPublic()
+    })
+    @OptionalGetter(visibility = Visibility.PUBLIC)
+    private Boolean someBooleanField
 
 }
 
