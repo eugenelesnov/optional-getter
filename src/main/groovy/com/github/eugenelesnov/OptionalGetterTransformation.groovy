@@ -18,7 +18,6 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
         if (nodes != null) {
-
             AnnotationNode annotation = nodes[0] as AnnotationNode
             AnnotatedNode annotatedField = nodes[1] as AnnotatedNode
 
@@ -29,15 +28,13 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     }
 
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
-        def fieldValue = annotatedField.properties as ConstantExpression
-
         annotatedField.owner.addMethod(
                 "get" + annotatedField.name.capitalize() + "Optional",
                 getVisibilityProperty(annotation),
-                makeClassSafeWithGenerics(Optional, fieldValue.type),
+                makeClassSafeWithGenerics(Optional, annotatedField.type),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                macro { return Optional.ofNullable(fieldValue.value) }
+                macro { return Optional.ofNullable(annotatedField.initialValueExpression) }
         )
     }
 
