@@ -44,5 +44,22 @@ class OptionalGetterTransformationAstTest {
     @OptionalGetter(visibility = Visibility.PUBLIC)
     private Boolean someBooleanField
 
+    @ASTTest(phase = CompilePhase.SEMANTIC_ANALYSIS, value = {
+        when: 'we inspect the result of applying AST to the annotated field'
+        def fieldNode = node as FieldNode
+
+        then: 'generated method name should be getSomeIntegerFieldOptional'
+        MethodNode methodNode = fieldNode.owner.getDeclaredMethod("getSomeIntegerFieldOptional", Parameter.EMPTY_ARRAY)
+        assert methodNode != null
+
+        andThen: 'generated method should return Optional<Integer>'
+        assert methodNode.returnType == make(Optional<Integer>)
+
+        andThen: 'generated method should have public modifier by default '
+        assert methodNode.isPublic()
+    })
+    @OptionalGetter
+    private Integer someIntegerField
+
 }
 

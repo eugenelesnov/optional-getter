@@ -12,5 +12,5 @@ import java.lang.annotation.Target
 @GroovyASTTransformationClass(classes = [OptionalGetterTransformation])
 @interface OptionalGetter {
 
-    Visibility visibility()
+    Visibility visibility() default Visibility.PUBLIC
 }

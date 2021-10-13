@@ -52,7 +52,11 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     }
 
     private int getVisibilityProperty(AnnotationNode annotation) {
-        def visibility = annotation.getMember("visibility").properties["property"] as ConstantExpression
-        return Visibility.valueOf(visibility.value as String).code
+        def visibility = annotation.getMember("visibility")
+        if (visibility == null) {
+            return Visibility.PUBLIC.code
+        }
+        def propertyExpression = visibility.properties["property"] as ConstantExpression
+        return Visibility.valueOf(propertyExpression.value as String).code
     }
 }

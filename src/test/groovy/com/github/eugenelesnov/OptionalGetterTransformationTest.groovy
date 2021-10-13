@@ -63,4 +63,34 @@ class OptionalGetterTransformationTest {
         assert foo.getProperty("someField") == foo.getSomeFieldOptional().orElse(Integer.MAX_VALUE)
 '''
     }
+
+    @Test
+    void 'should generate optional getter with Boolean as generic and with public modifier by default'() {
+        assertScript '''
+        import java.lang.reflect.ParameterizedType
+        
+        import groovyjarjarasm.asm.Opcodes       
+       
+        import com.github.eugenelesnov.OptionalGetter
+        import com.github.eugenelesnov.Visibility
+       
+        class Foo {
+            @OptionalGetter
+            private Boolean someField
+            
+            void setSomeField(Boolean someField) {
+                this.someField = someField
+            }
+        }
+        
+        Foo foo = new Foo()
+        foo.setSomeField(true)
+
+        def getter = foo.class.getDeclaredMethod("getSomeFieldOptional", new Class[] {})
+        assert getter != null
+        assert Arrays.asList(getter.modifiers).contains(Opcodes.ACC_PUBLIC)
+        assert getter.returnType == Optional<Boolean>
+        assert foo.getProperty("someField") == foo.getSomeFieldOptional().orElse(false)
+'''
+    }
 }
