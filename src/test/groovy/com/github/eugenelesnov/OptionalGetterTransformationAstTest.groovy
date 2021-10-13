@@ -1,7 +1,6 @@
 package com.github.eugenelesnov
 
 import groovy.transform.ASTTest
-import groovyjarjarasm.asm.Opcodes
 import org.codehaus.groovy.ast.FieldNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
@@ -23,7 +22,7 @@ class OptionalGetterTransformationAstTest {
         assert methodNode.returnType == make(Optional<String>)
 
         andThen: 'generated method should have protected modifier'
-        assert methodNode.getModifiers() == Opcodes.ACC_PROTECTED
+        assert methodNode.isProtected()
     })
     @OptionalGetter(visibility = Visibility.PROTECTED)
     private String someField
