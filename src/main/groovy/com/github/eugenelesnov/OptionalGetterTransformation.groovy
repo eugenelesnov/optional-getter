@@ -3,6 +3,9 @@ package com.github.eugenelesnov
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.FieldExpression
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
+import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.control.CompilePhase
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.FieldASTTransformation
@@ -34,7 +37,17 @@ class OptionalGetterTransformation extends FieldASTTransformation {
                 makeClassSafeWithGenerics(Optional, annotatedField.type),
                 Parameter.EMPTY_ARRAY,
                 ClassNode.EMPTY_ARRAY,
-                macro { return Optional.ofNullable(annotatedField.initialValueExpression) }
+                buildMethodBody(annotatedField)
+        )
+    }
+
+    private ReturnStatement buildMethodBody(FieldNode annotatedField) {
+        return new ReturnStatement(
+                new StaticMethodCallExpression(
+                        new ClassNode(Optional),
+                        "ofNullable",
+                        new FieldExpression(annotatedField)
+                )
         )
     }
 
