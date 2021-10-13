@@ -3,7 +3,7 @@ package com.github.eugenelesnov
 import groovyjarjarasm.asm.Opcodes
 
 enum Visibility {
-    PUBLIC(Opcodes.ACC_PUBLIC), PROTECTED(Opcodes.ACC_PROTECTED), PRIVATE(Opcodes.ACC_PRIVATE)
+    PUBLIC(Opcodes.ACC_PUBLIC), PROTECTED(Opcodes.ACC_PROTECTED)
 
     private final int code
 
