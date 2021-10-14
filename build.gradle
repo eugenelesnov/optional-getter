@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.github.eugenelesnov'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 
