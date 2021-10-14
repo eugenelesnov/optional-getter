@@ -31,7 +31,7 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     }
 
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
-        if (isDuplicateExists(annotatedField).isEmpty()) {
+        if (!isDuplicateExists(annotatedField).isPresent()) {
             annotatedField.owner.addMethod(
                     buildMethodName(annotatedField),
                     getVisibilityProperty(annotation),
