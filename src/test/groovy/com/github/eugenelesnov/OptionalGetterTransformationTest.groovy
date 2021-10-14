@@ -93,4 +93,45 @@ class OptionalGetterTransformationTest {
         assert foo.getProperty("someField") == foo.getSomeFieldOptional().orElse(false)
 '''
     }
+
+    @Test
+    void 'should not generate optional getter if duplicated method with same signature exists'() {
+        assertScript '''
+        
+        import org.codehaus.groovy.ast.Parameter
+
+        import java.lang.reflect.ParameterizedType
+        
+        import groovyjarjarasm.asm.Opcodes       
+       
+        import com.github.eugenelesnov.OptionalGetter
+        import com.github.eugenelesnov.Visibility
+
+        import java.util.stream.Collectors
+       
+        class Foo {
+            @OptionalGetter
+            private Boolean someField
+            
+            void setSomeField(Boolean someField) {
+                this.someField = someField
+            }
+            
+            Optional<Boolean> getSomeFieldOptional() {
+                return Optional.ofNullable(someField)
+            }
+        }
+        
+        Foo foo = new Foo()
+        foo.setSomeField(true)
+
+        def methods = Arrays.asList(foo.class.getDeclaredMethods()).stream()
+                                             .filter(m -> m.name == "getSomeFieldOptional")
+                                             .collect(Collectors.toList())
+        assert methods.size() == 1
+        def method = methods.get(0)
+        assert method.returnType == Optional<Boolean>
+        assert method.parameters == new java.lang.reflect.Parameter[] {}
+'''
+    }
 }

@@ -7,6 +7,7 @@ import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.control.CompilePhase
 
 import static org.codehaus.groovy.ast.ClassHelper.make
+import static org.codehaus.groovy.ast.tools.GenericsUtils.makeClassSafeWithGenerics
 
 class OptionalGetterTransformationAstTest {
 
@@ -60,6 +61,24 @@ class OptionalGetterTransformationAstTest {
     })
     @OptionalGetter
     private Integer someIntegerField
+
+    @ASTTest(phase = CompilePhase.SEMANTIC_ANALYSIS, value = {
+        when: 'we inspect the result of applying AST to the annotated field'
+        def fieldNode = node as FieldNode
+
+        then: 'new getter should not be generated if duplicated method with same signature exists'
+        List<MethodNode> methods = fieldNode.owner.getDeclaredMethods("getSomeFieldOptional")
+        assert methods.size() == 1
+        def method = methods.get(0)
+        assert method.returnType == makeClassSafeWithGenerics(Optional, fieldNode.type)
+        assert method.parameters == Parameter.EMPTY_ARRAY
+    })
+    @OptionalGetter
+    private Integer someField
+
+    Optional<Integer> getSomeFieldOptional() {
+        return Optional.ofNullable(someField)
+    }
 
 }
 
