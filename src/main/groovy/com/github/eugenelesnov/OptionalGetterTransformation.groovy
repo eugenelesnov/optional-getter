@@ -33,7 +33,7 @@ class OptionalGetterTransformation extends FieldASTTransformation {
     private void visitNode(AnnotationNode annotation, FieldNode annotatedField) {
         if (!isDuplicateExists(annotatedField).isPresent()) {
             annotatedField.owner.addMethod(
-                    buildMethodName(annotatedField),
+                    "get${annotatedField.name.capitalize()}Optional",
                     getVisibilityProperty(annotation),
                     makeClassSafeWithGenerics(Optional, annotatedField.type),
                     Parameter.EMPTY_ARRAY,
@@ -47,14 +47,10 @@ class OptionalGetterTransformation extends FieldASTTransformation {
         return annotatedField.owner.methods.stream()
                 .filter(m -> {
                     m.returnType == makeClassSafeWithGenerics(Optional, annotatedField.type) &&
-                            m.name == buildMethodName(annotatedField) &&
+                            m.name == "get${annotatedField.name.capitalize()}Optional" &&
                             m.parameters == Parameter.EMPTY_ARRAY
                 })
                 .findAny()
-    }
-
-    private String buildMethodName(FieldNode annotatedField) {
-        return "get" + annotatedField.name.capitalize() + "Optional"
     }
 
     private ReturnStatement buildMethodBody(FieldNode annotatedField) {
