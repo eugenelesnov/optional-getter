@@ -13,6 +13,11 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 
 import static org.codehaus.groovy.ast.tools.GenericsUtils.makeClassSafeWithGenerics
 
+/**
+ * Implementation of AST transformations for marked with {@link OptionalGetter} fields
+ *
+ * @author Eugene Lesnov
+ */
 @CompileStatic
 @SuppressWarnings("GrMethodMayBeStatic")
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)

@@ -7,6 +7,11 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
+/**
+ * Annotation marker for generating a getter
+ *
+ * @author Eugene Lesnov
+ */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.FIELD)
 @GroovyASTTransformationClass(classes = [OptionalGetterTransformation])
