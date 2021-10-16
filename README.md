@@ -71,5 +71,5 @@ Well, there are plans...
 
 1) Fixing possible bugs
 2) IDE support. Of course, Intelij IDEA is a priority ;)
-   For now, it works for Groovy only (no compile time check). There is no way (**yet**!) to use this library with Java
-   because IDE won't let you use the method generated at the compile-time..
+   For now, it works for Groovy only. There is no way (**yet**!) to use this library with Java because IDE won't let you
+   use the method generated at the compile-time..
