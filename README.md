@@ -61,7 +61,7 @@ allprojects {
 
 ```groovy
 dependencies {
-   implementation 'com.github.EugeneLesnov:optional-getter:1.0'
+   implementation 'com.github.eugenelesnov:optional-getter:1.0'
 }
 ```
 
