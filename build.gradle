@@ -20,7 +20,7 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
     testImplementation 'org.codehaus.groovy:groovy-test:3.0.8'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
 }
 
 test {
